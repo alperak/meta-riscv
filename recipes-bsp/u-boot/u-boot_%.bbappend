@@ -27,8 +27,6 @@ SRC_URI:append:ae350-ax45mp = " \
 SRC_URI:append:beaglev-ahead = " \
             file://0001-ram-thead-th1520-Support-single-rank-firmware.patch \
             file://0002-Add-Support-for-Beagle-V-Ahead-board.patch \
-            file://boot.cmd \
-            file://uEnv.txt \
             file://beaglev-ahead-boot.cfg \
             "
 SRC_URI:append:beaglev-fire = " \
@@ -159,7 +157,6 @@ do_deploy:append:ae350-ax45mp() {
 
 do_deploy:append:beaglev-ahead() {
     install -m 644 ${B}/u-boot-with-spl.bin ${DEPLOYDIR}
-    install -m 644 ${UNPACKDIR}/uEnv.txt ${DEPLOYDIR}/uEnv.txt
 }
 
 do_deploy:append:freedom-u540() {
