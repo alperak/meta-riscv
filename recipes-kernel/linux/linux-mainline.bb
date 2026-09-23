@@ -136,8 +136,7 @@ do_deploy:append:beaglev-ahead() {
     cp -f ${DEPLOYDIR}/Image ${DEPLOYDIR}/.boot/
     cp -f ${UNPACKDIR}/extlinux.conf ${DEPLOYDIR}/.boot/extlinux/
     
-    cp -f ${UNPACKDIR}/extlinux.conf ${DEPLOYDIR}/extlinux_sd.conf
-    sed -i 's/\/dev\/mmcblk0p3/\/dev\/mmcblk1p3/g' ${DEPLOYDIR}/extlinux_sd.conf
+    cp -f ${UNPACKDIR}/extlinux.conf ${DEPLOYDIR}/extlinux.conf
 
     dd if=/dev/zero of=${DEPLOYDIR}/boot.ext4 bs=1 count=0 seek=190M
     mkfs.ext4 -F ${DEPLOYDIR}/boot.ext4 -d ${DEPLOYDIR}/.boot
