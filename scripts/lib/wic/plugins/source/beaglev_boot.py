@@ -8,6 +8,11 @@ from wic.misc import exec_native_cmd
 
 logger = logging.getLogger('wic')
 
+# u-boot is written to the start of the disk and the GPT partition array
+# follows right after the area that is reserved for it
+BOOT_AREA_SIZE = 4 * 1024 * 1024
+GPT_TABLE_LBA = BOOT_AREA_SIZE // 512
+
 
 class BeagleVBootPlugin(SourcePlugin):
     name = 'beaglev_boot'
@@ -49,17 +54,18 @@ class BeagleVBootPlugin(SourcePlugin):
                 "BeagleV boot plugin: U-Boot image is too small"
             )
 
-        if uboot_size > 1024 * 1024:
+        if uboot_size > BOOT_AREA_SIZE:
             raise WicError(
-                "BeagleV boot plugin: U-Boot image exceeds the 1 MiB boot area"
+                "BeagleV boot plugin: U-Boot image exceeds the %d MiB boot area"
+                % (BOOT_AREA_SIZE // (1024 * 1024))
             )
 
         logger.debug(
-            "=== Moving GPT entry array to LBA 4096 ==="
+            "=== Moving GPT entry array to LBA %d ===", GPT_TABLE_LBA
         )
 
         exec_native_cmd(
-            "sgdisk -j 4096 %s" % image,
+            "sgdisk -j %d %s" % (GPT_TABLE_LBA, image),
             native_sysroot
         )
 
@@ -68,12 +74,12 @@ class BeagleVBootPlugin(SourcePlugin):
             protected_metadata = img.read(164)
 
         logger.debug(
-            "=== Clearing disk area from 1 MiB to 2 MiB ==="
+            "=== Clearing the rest of the boot area ==="
         )
 
         with open(image, "r+b") as img:
-            img.seek(1024 * 1024)
-            img.write(b"\x00" * (1024 * 1024))
+            img.seek(uboot_size)
+            img.write(b"\x00" * (BOOT_AREA_SIZE - uboot_size))
 
         logger.debug(
             "=== Writing U-Boot bytes 0..439 ==="
