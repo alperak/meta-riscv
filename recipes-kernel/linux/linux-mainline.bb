@@ -46,6 +46,7 @@ SRC_URI:append:th1520 = " \
 	file://0003-riscv-dts-thead-Add-TH1520-USB-nodes.patch \
         file://0004-riscv-dts-enable-USB-on-beaglev.patch \
         file://thead-usb.cfg \
+        file://thead-aon.cfg \
 "
 
 SRC_URI:append:eswin-ebc77-mainline = " \
