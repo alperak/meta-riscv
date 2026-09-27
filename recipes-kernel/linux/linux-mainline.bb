@@ -46,6 +46,7 @@ SRC_URI:append:th1520 = " \
         file://0004-riscv-dts-enable-USB-on-beaglev.patch \
         file://0001-power-reset-th1520-aon-send-RPCs-from-sleepable-hand.patch \
         file://thead-usb.cfg \
+        file://thead-aon.cfg \
 "
 
 SRC_URI:append:eswin-ebc77-mainline = " \
